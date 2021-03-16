@@ -69,6 +69,23 @@ class TestVotesView(APITestCase):
         data = response.json()
         self.assertEqual(data['value'], ['"7" is not a valid choice.'])
 
+    def test_create_invalid_fk(self):
+        self.client.force_authenticate(user=self.user)
+
+        payload = {
+            'task': 3,
+            'user': 2,
+            'value': '5',
+            'comments': 'This is my vote'
+        }
+
+        response = self.client.post(self.url, data=payload)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        data = response.json()
+        self.assertTrue(type(data) == dict)
+        self.assertEqual(data['task'], ['Invalid pk "3" - object does not exist.'])
+        self.assertEqual(data['user'], ['Invalid pk "2" - object does not exist.'])
+
     def test_create(self):
         self.client.force_authenticate(user=self.user)
 
