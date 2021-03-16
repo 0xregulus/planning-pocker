@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+    db:
+        image: postgres
+        environment:
+          - POSTGRES_DB=postgres
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+    redis:
+        image: redis
+    backend:
+        build:
+            context: .
+            dockerfile: docker/DockerFile-backend
+        command: >
+            bash -c "python manage.py migrate --settings=planningpocker.settings.production
+            && python manage.py runserver 0.0.0.0:8000 --settings=planningpocker.settings.production"
+        volumes:
+            - .:/code
+        ports:
+            - "8000:8000"
+        depends_on:
+            - db
+            - redis
+    frontend:
+        build:
+            context: .
+            dockerfile: docker/Dockerfile-frontend
+        command: npm start
+        volumes:
+            - .:/code
+        ports:
+            - "80:3000"
+        depends_on:
+            - db
+            - redis
+            - backend
