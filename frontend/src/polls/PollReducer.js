@@ -9,7 +9,7 @@ export const pollReducer = (state, action) => {
             } else {
                 state[index] = action.payload;
             }
-            return state
+            return [...state]
         default:
             return state;
     }

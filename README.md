@@ -62,7 +62,6 @@ $ make run_front
 
 
 ## TODO
-- Frontend bugs: (Refresh vote list when new message arrive / env proxy)
 - Refresh token
 - List poll participants
 - Define when poll is finished
